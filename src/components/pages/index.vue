@@ -19,7 +19,16 @@
             <span class="day">{{item.day}}</span>
           </div>
         </draggable>
-        <router-link to="/about"><a href="#" class="btn-circle-3d">+</a></router-link>
+        <!-- <router-link to="/about">aboutVue</router-link> -->
+      </div>
+    </div>
+    <div class="modal-sample">
+      <a href="#" class="btn-circle-3d" @click="toggle">+</a>
+      <div id="overlay" v-if="visible">
+        <div id="content">
+          <h3>Task追加</h3>
+          <button type="button" @click="toggle">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -27,10 +36,11 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
-  name:'App',
+  name:'modal-sample',
   components: { draggable },
   data(){
     return{
+      visible: false,
       message:'Tasks',
       section1:'基本スケジュール',
       section2:'スポーツ',
@@ -60,8 +70,16 @@ export default {
           day: '1月1日' }
       ]
     }
+  },
+   methods: {
+    toggle() {
+      this.visible = !this.visible;
+    }
   }
 }
+
+
+ 
 </script>
 <style>
  @media (max-width:768px){
@@ -101,6 +119,7 @@ export default {
     }
 
     .btn-circle-3d {
+      font-size: 10vw;
       display: inline-block;
       text-decoration: none;
       background: #ff8181;
@@ -111,10 +130,11 @@ export default {
       border-radius: 50%;
       text-align: center;
       font-weight: bold;
-      font-size: 40px;
-      overflow: auto;
+      overflow: hidden;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
       border-bottom: solid 3px #bd6565;
-      transition: 0.4s;
+      transition: .4s;
+      bottom: 50px;
     }
 
     .btn-circle-3d:active {
@@ -122,6 +142,27 @@ export default {
       transform: translateY(2px);
       box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
       border-bottom: none;
+    }
+
+    #overlay{
+      z-index:1;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-color:rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #content{
+      z-index:2;
+      width:90%;
+      height: 70%;
+      padding: 1em;
+      background:#fff;
     }
 
     a {
