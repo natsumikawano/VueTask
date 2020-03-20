@@ -19,7 +19,7 @@
             <span class="day">{{item.day}}</span>
           </div>
         </draggable>
-        <!-- <router-link to="/about">aboutVue</router-link> -->
+        <router-link to="/todo">ToDoVue</router-link>
       </div>
     </div>
     <div class="modal-sample">
@@ -52,22 +52,11 @@ export default {
           { id: 1, 
             name: '早起き',
             day: '12月13日' },
-          { id: 2, 
-            name: '早寝',
-            day: '1月5日'
-           }
       ],
       itemsB: [
         { id: 6, 
           name: 'テニス',
-          day: '12月13日' },
-        { id: 7, 
-          name: 'バスケ',
-          day: '1月5日'
-          },
-        { id: 8,
-          name: '野球',
-          day: '1月1日' }
+          day: '12月13日' }
       ]
     }
   },

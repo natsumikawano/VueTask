@@ -3,7 +3,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 import Index from "./components/pages/index.vue";
-import About from "./components/pages/about.vue";
+import ToDo from "./components/pages/ToDo.vue";
 
 export default new Router({
 	mode: 'history',
@@ -13,8 +13,8 @@ export default new Router({
 			component: Index
 		},
 		{
-			path: '/about',
-			component: About
+			path: '/ToDo',
+			component: ToDo
 		}
 	]
 })
