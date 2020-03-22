@@ -26,8 +26,25 @@
       <a href="#" class="btn-circle-3d" @click="toggle">+</a>
       <div id="overlay" v-if="visible">
         <div id="content">
-          <h3>Task追加</h3>
-          <button type="button" @click="toggle">Close</button>
+          <h2>タスク1</h2>
+          <div class="form-group">
+            <label for="exampleInputEmail1">期限</label>
+            <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+            <label for="exampleFormControlTextarea1">メモ</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
+          <div v-for="(task, n) in tasks" :key="task.task">
+            <p>
+              <span class="task">{{ task }}</span>
+            </p>
+          </div>
+          <p>
+            <input v-model="newTask">
+          </p>
+          <button type="button" class="btn btn-primary" @click="toggle">キャンセル</button>
+          <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button>
+          <button type="button" class="btn btn-primary" @click="addTask">追加</button>
         </div>
       </div>
     </div>
@@ -57,12 +74,40 @@ export default {
         { id: 6, 
           name: 'テニス',
           day: '12月13日' }
-      ]
+      ],
+      tasks: [],
+      newTask: null
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('tasks')) {
+      try {
+        this.tasks = JSON.parse(localStorage.getItem('tasks'));
+      } catch(e) {
+        localStorage.removeItem('tasks');
+      }
     }
   },
    methods: {
     toggle() {
       this.visible = !this.visible;
+    },
+    addTask() {
+      // 実際に何かしたことを入力する
+      if (!this.newTask) {
+        return;
+      }
+      this.tasks.push(this.newTask);
+      this.newTask = '';
+      this.saveTasks();
+    },
+    removeTask(x) {
+      this.tasks.splice(x, 1);
+      this.saveTasks();
+    },
+    saveTasks() {
+      const parsed = JSON.stringify(this.tasks);
+      localStorage.setItem('tasks', parsed);
     }
   }
 }
@@ -156,6 +201,11 @@ export default {
 
     a {
       float: right;
+    }
+
+    label {
+      margin-top: 20px;
+      margin-bottom: 0px;
     }
 
   }
