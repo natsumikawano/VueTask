@@ -4,13 +4,21 @@
       <div id="title">
         <p>{{message}}</p>
       </div>
+      <div v-for="(task, n) in tasks" :key="task.task">
+        <p>
+          <span class="task">{{ task }}
+      
+          </span>
+        </p>
+        <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button>
+      </div>
       <div>
         <div class="section">{{section1}}</div>
         <draggable v-model="itemsA" group="myGroup" @start="drag=true" @end="drag=false" :options="options">
           <div class="item detail" v-for="item in itemsA" :key="item.id">
             <span>{{item.name}}</span>
             <span class="day">{{item.day}}</span>
-          </div>
+        </div>
         </draggable>
         <div class="section">{{section2}}</div>
         <draggable v-model="itemsB" group="myGroup" @start="drag=true" @end="drag=false" :options="options">
@@ -19,7 +27,7 @@
             <span class="day">{{item.day}}</span>
           </div>
         </draggable>
-        <router-link to="/todo">ToDoVue</router-link>
+        <!-- <router-link to="/todo">ToDoVue</router-link> -->
       </div>
     </div>
     <div class="modal-sample">
@@ -32,18 +40,9 @@
             <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
 
             <label for="exampleFormControlTextarea1">メモ</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <textarea v-model="newTask" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
           </div>
-          <div v-for="(task, n) in tasks" :key="task.task">
-            <p>
-              <span class="task">{{ task }}</span>
-            </p>
-          </div>
-          <p>
-            <input v-model="newTask">
-          </p>
           <button type="button" class="btn btn-primary" @click="toggle">キャンセル</button>
-          <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button>
           <button type="button" class="btn btn-primary" @click="addTask">追加</button>
         </div>
       </div>
@@ -110,10 +109,7 @@ export default {
       localStorage.setItem('tasks', parsed);
     }
   }
-}
-
-
- 
+}; 
 </script>
 <style>
  @media (max-width:768px){
