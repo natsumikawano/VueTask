@@ -1,8 +1,9 @@
-<template>
+<!--<template>
 <div class="todo">
   <h2>Cats</h2>
-  <div v-for="(task, n) in tasks" :key="task.task">
+  <div v-for="(task, index) in tasks" :key="task.id">
     <p>
+    <span class="cat">タスク{{ index }}</span>
     <span class="cat">{{ task }}</span>
     <button @click="removeTask(n)">Remove</button>
     </p>

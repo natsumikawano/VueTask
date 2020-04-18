@@ -2,15 +2,19 @@
   <div>
     <div id="RootContent">
       <div id="title">
-        <p>{{message}}</p>
+        <h3>{{message}} 
+          <a href="#" @click="toggleSection"><font-awesome-icon icon="ellipsis-h"/></a>
+        </h3>
       </div>
-      <div v-for="(task, n) in tasks" :key="task.task">
+      <div v-for="(section) in sections" :key="section.id">
+        <div class="section">{{section}}</div>
+      </div>
+      <div v-for="(task) in tasks" :key="task.task">
         <p>
-          <span class="task">{{ task }}
-      
-          </span>
-        </p>
-        <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button>
+          <span class="task">タスク</span>
+          <span class="task">{{ task }}</span>
+        </p> 
+        <!-- <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button> -->
       </div>
       <div>
         <div class="section">{{section1}}</div>
@@ -27,7 +31,20 @@
             <span class="day">{{item.day}}</span>
           </div>
         </draggable>
-        <!-- <router-link to="/todo">ToDoVue</router-link> -->
+        <router-link to="/todo">ToDoVue</router-link>
+      </div>
+    </div>
+    <div class="modal-section">
+      <a href="#" class="btn-circle-3d" @click="toggleSection">+</a>
+      <div id="overlay" v-if="visibleSection">
+        <div id="content">
+          <h2>セクション名</h2>
+          <div class="form-group">
+            <input v-model="newSection" type="text" class="form-control">
+          </div>
+          <button type="button" class="btn btn-primary" @click="toggleSection">キャンセル</button>
+          <button type="button" class="btn btn-primary" @click="addSection">追加</button>
+        </div>
       </div>
     </div>
     <div class="modal-sample">
@@ -57,6 +74,7 @@ export default {
   data(){
     return{
       visible: false,
+      visibleSection: false,
       message:'Tasks',
       section1:'基本スケジュール',
       section2:'スポーツ',
@@ -74,11 +92,21 @@ export default {
           name: 'テニス',
           day: '12月13日' }
       ],
+      sections: [],
+      newSection: null,
       tasks: [],
       newTask: null
     }
   },
   mounted() {
+    if (localStorage.getItem('sections')) {
+      try {
+        this.sections = JSON.parse(localStorage.getItem('sections'));
+      } catch(e) {
+        localStorage.removeItem('sections');
+      }
+    }
+
     if (localStorage.getItem('tasks')) {
       try {
         this.tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -88,6 +116,22 @@ export default {
     }
   },
    methods: {
+     toggleSection() {
+      this.visibleSection = !this.visibleSection;
+    },
+    addSection() {
+      // 実際に何かしたことを入力する
+      if (!this.newSection) {
+        return;
+      }
+      this.sections.push(this.newSection);
+      this.newSection = '';
+      this.saveSections();
+    },
+    saveSections() {
+      const parsed = JSON.stringify(this.sections);
+      localStorage.setItem('sections', parsed);
+    },
     toggle() {
       this.visible = !this.visible;
     },
