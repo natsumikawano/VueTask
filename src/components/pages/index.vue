@@ -10,7 +10,7 @@
           <div v-for="(section) in sections" :key="section.id">
             <div class="section">{{section}}</div>
           </div>
-          <div class="item detail" v-for="(day,index) in taskdays" :key="index">
+          <div class="item detail" v-for="(index,day) in taskdays" :key="index">
             <p>
               <span>タスク{{ index + 1 }}</span>
               <span class="day">{{ day }}</span>
