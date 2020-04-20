@@ -6,16 +6,18 @@
           <a href="#" @click="toggleSection"><font-awesome-icon icon="ellipsis-h"/></a>
         </h3>
       </div>
-      <div v-for="(section) in sections" :key="section.id">
-        <div class="section">{{section}}</div>
-      </div>
-      <div v-for="(task) in tasks" :key="task.task">
-        <p>
-          <span class="task">タスク</span>
-          <span class="task">{{ task }}</span>
-        </p> 
-        <!-- <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button> -->
-      </div>
+        <draggable :options="options">
+          <div v-for="(section) in sections" :key="section.id">
+            <div class="section">{{section}}</div>
+          </div>
+          <div class="item detail" v-for="(day,index) in taskdays" :key="index">
+            <p>
+              <span>タスク{{ index + 1 }}</span>
+              <span class="day">{{ day }}</span>
+            </p> 
+            <!-- <button type="button" class="btn btn-primary"  @click="removeTask(n)">削除</button> -->
+          </div>
+        </draggable>
       <div>
         <div class="section">{{section1}}</div>
         <draggable v-model="itemsA" group="myGroup" @start="drag=true" @end="drag=false" :options="options">
@@ -34,8 +36,8 @@
         <router-link to="/todo">ToDoVue</router-link>
       </div>
     </div>
+    <!-- セクション追加 -->
     <div class="modal-section">
-      <a href="#" class="btn-circle-3d" @click="toggleSection">+</a>
       <div id="overlay" v-if="visibleSection">
         <div id="content">
           <h2>セクション名</h2>
@@ -47,14 +49,15 @@
         </div>
       </div>
     </div>
-    <div class="modal-sample">
+    <!-- タスク追加 -->
+    <div class="modal-task">
       <a href="#" class="btn-circle-3d" @click="toggle">+</a>
       <div id="overlay" v-if="visible">
         <div id="content">
-          <h2>タスク1</h2>
+          <h2>タスク</h2>
           <div class="form-group">
             <label for="exampleInputEmail1">期限</label>
-            <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <input v-model="newTaskDay" type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
 
             <label for="exampleFormControlTextarea1">メモ</label>
             <textarea v-model="newTask" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
@@ -69,7 +72,7 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
-  name:'modal-sample',
+  name:'modal-section',
   components: { draggable },
   data(){
     return{
@@ -94,6 +97,8 @@ export default {
       ],
       sections: [],
       newSection: null,
+      taskdays: [],
+      newTaskDay: null,
       tasks: [],
       newTask: null
     }
@@ -104,6 +109,14 @@ export default {
         this.sections = JSON.parse(localStorage.getItem('sections'));
       } catch(e) {
         localStorage.removeItem('sections');
+      }
+    }
+
+    if (localStorage.getItem('taskdays')) {
+      try {
+        this.taskdays = JSON.parse(localStorage.getItem('taskdays'));
+      } catch(e) {
+        localStorage.removeItem('taskdays');
       }
     }
 
@@ -137,20 +150,27 @@ export default {
     },
     addTask() {
       // 実際に何かしたことを入力する
+      if (!this.newTaskDay) {
+        return;
+      }
+
       if (!this.newTask) {
         return;
       }
+      this.taskdays.push(this.newTaskDay);
       this.tasks.push(this.newTask);
+      this.newTaskDay = '';
       this.newTask = '';
       this.saveTasks();
     },
     removeTask(x) {
+      this.taskdays.splice(x, 1);
       this.tasks.splice(x, 1);
       this.saveTasks();
     },
     saveTasks() {
-      const parsed = JSON.stringify(this.tasks);
-      localStorage.setItem('tasks', parsed);
+      const parsed = JSON.stringify(this.taskdays,this.tasks);
+      localStorage.setItem('taskdays','tasks',parsed);
     }
   }
 }; 
